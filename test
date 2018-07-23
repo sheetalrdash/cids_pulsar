@@ -1,0 +1,15 @@
+import requests
+import time
+import pulsar
+import logging
+import sys,threading
+
+acl = requests.get("http://127.0.0.1:18080/wm/acl/rules/json")
+acl_json = str(acl.json())
+print acl_json
+
+if "10.0.0.1" in acl_json:
+	print "present"
+else:
+	print "absent"
+

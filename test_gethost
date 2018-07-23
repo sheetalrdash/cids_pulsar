@@ -1,0 +1,23 @@
+import requests
+import sys
+
+def find_host( DPID , PORT):
+    cntrlr_summ = requests.get("http://127.0.0.1:8080/wm/core/controller/summary/json")
+    cntrlr_summ_json = cntrlr_summ.json()
+    number_of_hosts = cntrlr_summ_json["# hosts"]
+    device_detail = requests.get("http://127.0.0.1:8080/wm/device/")
+    device_detail_json = device_detail.json()
+    for index in range(0, number_of_hosts):
+        dpid_curr=str(device_detail_json["devices"][index]['attachmentPoint'][0]['switch'])
+        port_curr=str(device_detail_json["devices"][index]['attachmentPoint'][0]['port'])
+        print dpid_curr
+        print port_curr
+        if(dpid_curr==DPID and port_curr == PORT):
+            device_ipv4 = str(device_detail_json["devices"][index]['ipv4']).replace('[','').replace(']','').replace('u','')
+	return(device_ipv4)
+
+def main(args):
+    print find_host("00:00:00:00:00:00:00:02","3")
+
+if __name__ == '__main__':
+    main(sys.argv)
