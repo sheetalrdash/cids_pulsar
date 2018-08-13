@@ -28,7 +28,7 @@ def sniffPackets(packet):           # custom custom packet sniffer action method
         pckt_dst=packet[IP].dst
         pckt_ttl=packet[IP].ttl
         print "IP Packet: %s is going to %s and has ttl value %s" % (pckt_src,pckt_dst,pckt_ttl)
-	logging.info('Source|Target: %s ', pckt_src + "|" + pckt_dst)
+	#logging.info('Source|Target: %s ', pckt_src + "|" + pckt_dst)
 	producer.send_async(pckt_src + "|" + pckt_dst,callBack)
         return
 def sniffPacketsSwitch(switch):
