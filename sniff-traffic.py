@@ -12,7 +12,7 @@ client = pulsar.Client('pulsar://localhost:6650')
 producer = client.create_producer(SNIFFER_TOPIC, max_pending_messages=100000)
 logging.info('Connected to Pulsar')
 def callBack(res, msg):
-	print('Message published: %s'%res)
+    print('Message published: %s'%res)
 
 def sniffPackets(packet):           # custom custom packet sniffer action method
     if not (packet.haslayer(ICMP)):
@@ -28,19 +28,19 @@ def sniffPackets(packet):           # custom custom packet sniffer action method
         pckt_dst=packet[IP].dst
         pckt_ttl=packet[IP].ttl
         print "IP Packet: %s is going to %s and has ttl value %s" % (pckt_src,pckt_dst,pckt_ttl)
-	#logging.info('Source|Target: %s ', pckt_src + "|" + pckt_dst)
-	producer.send_async(pckt_src + "|" + pckt_dst,callBack)
+        #logging.info('Source|Target: %s ', pckt_src + "|" + pckt_dst)
+        producer.send_async(pckt_src + "|" + pckt_dst,callBack)
         return
 def sniffPacketsSwitch(switch):
-	sniff(filter="ip",iface=switch,prn=sniffPackets)
+    sniff(filter="ip",iface=switch,prn=sniffPackets)
 
 def main():
 
-	print "custom packet sniffer"
-	switches=commands.getoutput('ifconfig|egrep "s?-eth*"|awk -F":" \'{print $1}\'')
-	for switch in switches.splitlines():
-		if switch != '0':
-			p=Process(target=sniffPacketsSwitch, args=(switch,))
-			p.start()
+    print "custom packet sniffer"
+    switches=commands.getoutput('ifconfig|egrep "s?-eth*"|awk -F":" \'{print $1}\'')
+    for switch in switches.splitlines():
+        if switch != '0':
+            p=Process(target=sniffPacketsSwitch, args=(switch,))
+            p.start()
 if __name__ == '__main__':
-	main()
+    main()

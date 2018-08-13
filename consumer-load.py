@@ -43,20 +43,20 @@ def main(args):
             # try and receive messages with a timeout of 10 seconds
             msg = consumer.receive(timeout_millis=TIMEOUT)
             logging.info("Received message '%s'", msg.data())
-	    source_ips.append(msg.data().split("|")[0])
-	    dest_ips.append(msg.data().split("|")[1])
-	    counter=counter+1
-	    if counter >= 5:
-		traffic=list(zip(source_ips,dest_ips))
-		source_ips=[]
-		dest_ips=[]
-		insert_db(traffic)
-		counter=0
-    	    consumer.acknowledge(msg)  # send ack to pulsar for message consumption
+            source_ips.append(msg.data().split("|")[0])
+            dest_ips.append(msg.data().split("|")[1])
+            counter=counter+1
+            if counter >= 5:
+                traffic=list(zip(source_ips,dest_ips))
+                source_ips=[]
+                dest_ips=[]
+                insert_db(traffic)
+                counter=0
+            consumer.acknowledge(msg)  # send ack to pulsar for message consumption
 
 
         except Exception:
-	        received = 0
+            received = 0
 
 if __name__ == '__main__':
     main(sys.argv)
