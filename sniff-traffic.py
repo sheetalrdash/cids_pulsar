@@ -42,7 +42,7 @@ def sniffPacketsSwitch(switch):
 def main():
 
     print "custom packet sniffer"
-    switches=commands.getoutput('ifconfig|egrep "s?-eth*"|awk -F":" \'{print $1}\'')
+    switches=commands.getoutput('ifconfig|egrep "s?-eth*"|grep -v s6|awk -F":" \'{print $1}\'')
     for switch in switches.splitlines():
         if switch != '0':
             p=Process(target=sniffPacketsSwitch, args=(switch,))
