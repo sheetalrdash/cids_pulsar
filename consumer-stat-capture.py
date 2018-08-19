@@ -37,9 +37,9 @@ def insert_db():
     mydb.commit()
     print(datetime.datetime.now().strftime("%I:%M%p %d-%b-%Y")+" : " + str(mycursor.rowcount) + " record inserted to Source_Sniffer.")
     mycursor.close()
-    mycursor = mydb.cursor()
 
     # Insert into Destination Sniffer
+    mycursor = mydb.cursor()
     sql = "insert into dest_sniffer(dest_ip,count_per_polling_interval,loadtime) (select dest_ip,count(1),now() from ip_sniffer group by dest_ip)"
     mycursor.execute(sql)
     mydb.commit()
