@@ -30,6 +30,22 @@ def insert_db():
         database="cids"
     )
     block_list= []
+
+    # truncate source_sniffer
+    mycursor = mydb.cursor()
+    sql = "truncate source_sniffer"
+    mycursor.execute(sql)
+    mydb.commit()
+    print(datetime.datetime.now().strftime("%I:%M%p %d-%b-%Y") + " : Truncate compl:q!ete for Source Sniffer")
+    mycursor = mydb.cursor()
+
+    # truncate destination sniffer
+    sql = "truncate dest_sniffer"
+    mycursor.execute(sql)
+    mydb.commit()
+    print(datetime.datetime.now().strftime("%I:%M%p %d-%b-%Y") + " : Truncate complete for Dest Sniffer")
+    mycursor.close()
+
     # Insert into Source Sniffer
     mycursor = mydb.cursor()
     sql = "insert into source_sniffer(source_ip,count_per_polling_interval,loadtime) (select source_ip,count(1),now() from ip_sniffer group by source_ip)"
@@ -48,29 +64,14 @@ def insert_db():
 
     # Pick Source Ips with count > threshold
     mycursor = mydb.cursor()
-    mycursor.execute("SELECT distinct source_ip FROM source_sniffer where count_per_polling_interval>50")
+    mycursor.execute("SELECT distinct source_ip FROM source_sniffer where count_per_polling_interval>150")
     source_ips = mycursor.fetchall()
     mycursor.close()
 
     # Pick Destination Ips with count > threshold
     mycursor = mydb.cursor()
-    mycursor.execute("SELECT distinct dest_ip FROM dest_sniffer where count_per_polling_interval>80")
+    mycursor.execute("SELECT distinct dest_ip FROM dest_sniffer where count_per_polling_interval>150")
     dest_ips = mycursor.fetchall()
-    mycursor.close()
-
-    # truncate source_sniffer
-    mycursor = mydb.cursor()
-    sql = "truncate source_sniffer"
-    mycursor.execute(sql)
-    mydb.commit()
-    print(datetime.datetime.now().strftime("%I:%M%p %d-%b-%Y") + " : Truncate complete for Source Sniffer")
-    mycursor = mydb.cursor()
-
-    # truncate destination sniffer
-    sql = "truncate dest_sniffer"
-    mycursor.execute(sql)
-    mydb.commit()
-    print(datetime.datetime.now().strftime("%I:%M%p %d-%b-%Y") + " : Truncate complete for Dest Sniffer")
     mycursor.close()
 
     for ip in dest_ips:
@@ -100,7 +101,7 @@ def insert_db():
 def main(args):
     while True:
         insert_db()
-        time.sleep(60)
+        time.sleep(10)
 
 if __name__ == '__main__':
     main(sys.argv)
